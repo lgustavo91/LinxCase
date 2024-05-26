@@ -67,13 +67,15 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   custom_data = base64encode(<<EOF
-                #!/bin/bash
-                apt-get update
-                apt-get install -y nginx
-                systemctl enable nginx
-                systemctl start nginx
-              EOF
-              )
+#cloud-config
+package_upgrade: true
+packages:
+  - nginx
+runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
+EOF
+)
 
   tags = var.tags
 }
