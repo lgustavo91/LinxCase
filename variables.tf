@@ -5,7 +5,7 @@ variable "prefix" {
 
 variable "resource_group_name" {
   description = "Name of the resource group"
-  default     = "linxcase"
+  default     = "linxcase-rg"
 }
 
 variable "location" {
