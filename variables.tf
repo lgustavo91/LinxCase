@@ -1,11 +1,11 @@
 variable "prefix" {
   description = "Prefix for resource naming"
-  default     = "caselinx"
+  default     = "linxcase"
 }
 
 variable "resource_group_name" {
   description = "Name of the resource group"
-  default     = "example-resources"
+  default     = "linxcase"
 }
 
 variable "location" {
