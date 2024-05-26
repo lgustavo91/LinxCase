@@ -27,7 +27,3 @@ Este repositório contém arquivos Terraform para configurar uma infraestrutura 
 
 6. Destrua os recursos (Caso necessário)
     terraform destroy -auto-approve
-
-
-
-##Gustavo Lopes da Silva
