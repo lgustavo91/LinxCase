@@ -46,7 +46,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = var.vm_size
-  admin_username      = var.admin_username
+  admin_username      = "adminuser"
   admin_password      = var.admin_password
   disable_password_authentication = false
 
@@ -66,14 +66,37 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = var.image_version
   }
 
-  custom_data = base64encode(<<EOF
-                #!/bin/bash
-                apt-get update
-                apt-get install -y nginx
-                systemctl enable nginx
-                systemctl start nginx
-              EOF
-              )
-
   tags = var.tags
 }
+
+resource "null_resource" "transfer_install_script" {
+  provisioner "file" {
+    source      = "${path.module}/install_nginx.sh"  # Caminho local do script no seu computador
+    destination = "/tmp/install_nginx.sh"            # Caminho de destino na VM
+    connection {
+      type     = "ssh"
+      host     = azurerm_public_ip.pip.ip_address    # Substitua pelo endereço IP público da sua VM
+      user     = var.admin_username                  # Substitua pela variável que armazena o nome de usuário
+      password = var.admin_password                  # Substitua pela variável que armazena a senha do usuário
+    }
+  }
+}
+
+resource "null_resource" "install_nginx" {
+  depends_on = [null_resource.transfer_install_script]
+
+  provisioner "remote-exec" {
+    connection {
+      type     = "ssh"
+      host     = azurerm_public_ip.pip.ip_address  # Substitua pelo endereço IP público da sua VM
+      user     = var.admin_username                # Substitua pela variável que armazena o nome de usuário
+      password = var.admin_password                # Substitua pela variável que armazena a senha do usuário
+    }
+
+    inline = [
+      "chmod +x /tmp/install_nginx.sh",  # Adiciona permissão de execução ao script
+      "/tmp/install_nginx.sh"            # Executa o script
+    ]
+  }
+}
+
