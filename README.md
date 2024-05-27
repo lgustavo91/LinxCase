@@ -6,13 +6,15 @@ Este repositório contém arquivos Terraform para configurar uma infraestrutura 
 
 - Terraform instalado: [Instruções de instalação](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - Conta no Azure
-- Azure CLI configurado: `az login`
+- Azure CLI instalado: `az login`
+- Postman
 
 ## Como usar
 
-1. Clone o repositório:
-   git clone https://github.com/seu-usuario/terraform-azure-setup.git
-   cd terraform-azure-setup
+1. Clone o seguinte repositório:
+   https://github.com/lgustavo91/LinxCase.git
+
+2. Execute o `az login` e se autentique no portal Azure.
 
 2. Inicialize o diretório do Terraform:
     terraform init
