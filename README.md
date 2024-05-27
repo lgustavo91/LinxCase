@@ -23,7 +23,15 @@ Este repositório contém arquivos Terraform para configurar uma infraestrutura 
 4. Aplique as mudanças para criar os recursos:
     terraform apply
 
-5. 
 
-6. Destrua os recursos (Caso necessário)
+## Diagrama da Arquitetura.
+
+Infrasestrutura provisionada em Ambiente Azure, Utilizando Terraform para automatização.
+
+![image](https://github.com/lgustavo91/LinxCase/assets/52268689/cb902c37-bf62-4ab9-ac5f-6c331cf153be)
+
+
+
+## Destrua os recursos (Caso necessário)
     terraform destroy -auto-approve
+
