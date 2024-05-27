@@ -21,11 +21,46 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = [var.subnet_address_prefix]
 }
 
-resource "azurerm_public_ip" "pip" {
-  name                = "${var.prefix}-pip"
+resource "azurerm_network_security_group" "nsg" {
+  name                = "${var.prefix}-nsg"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
+
+  security_rule {
+    name                       = "AllowHTTP"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowHTTPS"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowSSH"
+    priority                   = 1000
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_interface" "nic" {
@@ -39,6 +74,18 @@ resource "azurerm_network_interface" "nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip.id
   }
+}
+
+resource "azurerm_public_ip" "pip" {
+  name                = "${var.prefix}-pip"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_network_interface_security_group_association" "nsg_association" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
@@ -68,12 +115,29 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   custom_data = base64encode(<<EOF
 #cloud-config
-package_upgrade: true
+package_update: true
 packages:
   - nginx
+
+write_files:
+  - path: /var/www/html/index.json
+    content: |
+      {
+        "mensagem": "Case Técnico - Linx"
+      }
+  - path: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 80;
+        location / {
+          root /var/www/html;
+          index index.json;
+        }
+      }
 runcmd:
   - systemctl enable nginx
   - systemctl start nginx
+  - systemctl restart nginx
 EOF
 )
 
