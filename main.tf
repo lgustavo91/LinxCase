@@ -115,12 +115,29 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   custom_data = base64encode(<<EOF
 #cloud-config
-package_upgrade: true
+package_update: true
 packages:
   - nginx
+
+write_files:
+  - path: /var/www/html/index.json
+    content: |
+      {
+        "mensagem": "Case Técnico - Linx"
+      }
+  - path: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 80;
+        location / {
+          root /var/www/html;
+          index index.json;
+        }
+      }
 runcmd:
   - systemctl enable nginx
   - systemctl start nginx
+  - systemctl restart nginx
 EOF
 )
 
