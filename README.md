@@ -30,7 +30,8 @@ Este repositório contém arquivos Terraform para configurar uma infraestrutura 
 
 Infrasestrutura provisionada em Ambiente Azure, Utilizando Terraform para automatização.
 
-![image](https://github.com/lgustavo91/LinxCase/assets/52268689/cdf27ff5-2b73-40b7-9af4-1984096637b8)
+![image](https://github.com/lgustavo91/LinxCase/assets/52268689/579383c8-68a8-4022-bfea-23eaed0142ae)
+
 
 
 
