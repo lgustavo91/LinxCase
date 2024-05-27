@@ -21,47 +21,48 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = [var.subnet_address_prefix]
 }
 
-resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.prefix}-nsg"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+# Bug no Destroy.
+# resource "azurerm_network_security_group" "nsg" {
+#   name                = "${var.prefix}-nsg"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
 
-  security_rule {
-    name                       = "AllowHTTP"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+#   security_rule {
+#     name                       = "AllowHTTP"
+#     priority                   = 1001
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "80"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
 
-  security_rule {
-    name                       = "AllowHTTPS"
-    priority                   = 1002
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "443"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+#   security_rule {
+#     name                       = "AllowHTTPS"
+#     priority                   = 1002
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "443"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
 
-  security_rule {
-    name                       = "AllowSSH"
-    priority                   = 1000
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
+#   security_rule {
+#     name                       = "AllowSSH"
+#     priority                   = 1000
+#     direction                  = "Inbound"
+#     access                     = "Allow"
+#     protocol                   = "Tcp"
+#     source_port_range          = "*"
+#     destination_port_range     = "22"
+#     source_address_prefix      = "*"
+#     destination_address_prefix = "*"
+#   }
+# }
 
 resource "azurerm_network_interface" "nic" {
   name                = "${var.prefix}-nic"
@@ -83,10 +84,10 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = "Dynamic"
 }
 
-resource "azurerm_network_interface_security_group_association" "nsg_association" {
-  network_interface_id      = azurerm_network_interface.nic.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
+# resource "azurerm_network_interface_security_group_association" "nsg_association" {
+#   network_interface_id      = azurerm_network_interface.nic.id
+#   network_security_group_id = azurerm_network_security_group.nsg.id
+# }
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = "${var.prefix}-vm"
