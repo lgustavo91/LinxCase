@@ -123,7 +123,7 @@ write_files:
   - path: /var/www/html/index.json
     content: |
       {
-        "mensagem": "Case Técnico - Linx"
+        "mensagem": "Olá Mundo"
       }
   - path: /etc/nginx/sites-available/default
     content: |
